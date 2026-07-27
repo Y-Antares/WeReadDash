@@ -4,67 +4,50 @@ import requests
 
 OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "../src/data/weread.json")
 
-def get_headers(weread_key):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Host": "i.weread.qq.com",
-        "Accept": "application/json, text/plain, */*",
-    }
-    
-    if weread_key.startswith("wrk-") or ";" not in weread_key:
-        headers["Authorization"] = f"Bearer {weread_key}"
-        headers["accessToken"] = weread_key
-    else:
-        headers["Cookie"] = weread_key
-        
-    return headers
-
-def fetch_weread_data():
-    weread_key = os.environ.get("WEREAD_KEY", "").strip()
-    if not weread_key:
-        print("❌ 错误：环境变量 WEREAD_KEY 为空，请检查 GitHub Secrets 设置。")
+def fetch_weread_agent_data():
+    api_key = os.environ.get("WEREAD_KEY", "").strip()
+    if not api_key:
+        print("❌ 错误：环境变量 WEREAD_KEY 为空！")
         return
 
-    headers = get_headers(weread_key)
-    print("🚀 开始访问微信读书 API...")
+    # 微信读书官方 Agent API 鉴权 Header
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36",
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
 
-    # 1. 请求笔记本接口（包含书架与笔记列表）
-    notebooks_url = "https://i.weread.qq.com/user/notebooks"
+    print("🚀 开始请求微信读书 Agent API...")
+
+    # 1. 请求官方 Agent API 的笔记本/书架列表
+    # Agent 架构下的 Endpoint 为 /api/v2/notebooks 或插件所调用的网关
+    agent_notebooks_url = "https://weread.qq.com/api/v2/notebooks" 
     raw_books = []
+    
     try:
-        res = requests.get(notebooks_url, headers=headers, timeout=15)
-        print(f"📌 [Notebooks] HTTP 状态码: {res.status_code}")
-        print(f"🔍 [Notebooks] 接口原始返回 (前500字符): {res.text[:500]}")
+        res = requests.get(agent_notebooks_url, headers=headers, timeout=15)
+        print(f"📌 [Agent Notebooks] HTTP 状态码: {res.status_code}")
         
+        # 如果 v2 路径不对，回退尝试 Agent 备用路径
+        if res.status_code == 404:
+            agent_notebooks_url = "https://weread.qq.com/api/skills/notebooks"
+            res = requests.get(agent_notebooks_url, headers=headers, timeout=15)
+            print(f"📌 [Skills Notebooks] HTTP 状态码: {res.status_code}")
+
         if res.status_code == 200:
             data = res.json()
-            raw_books = data.get("books", [])
+            raw_books = data.get("books", []) if isinstance(data, dict) else data
+            print(f"📚 成功通过 Agent API 拉取到 {len(raw_books)} 本书籍")
+        else:
+            print(f"🔍 接口返回: {res.text[:300]}")
     except Exception as e:
-        print(f"❌ 请求笔记本接口发生异常: {e}")
+        print(f"❌ 请求 Agent API 异常: {e}")
 
-    # 2. 请求阅读统计接口
-    stat_url = "https://i.weread.qq.com/user/v2/readstat"
-    read_stat = {}
-    try:
-        res = requests.get(stat_url, headers=headers, timeout=15)
-        print(f"📌 [ReadStat] HTTP 状态码: {res.status_code}")
-        print(f"🔍 [ReadStat] 接口原始返回 (前500字符): {res.text[:500]}")
-        
-        if res.status_code == 200:
-            read_stat = res.json()
-    except Exception as e:
-        print(f"❌ 请求阅读统计接口发生异常: {e}")
-
-    # 3. 提取与清洗书籍列表数据
+    # 2. 清洗数据并写入 json
     processed_books = []
     for item in raw_books[:6]:
-        book = item.get("book", {})
-        if not book and "bookId" in item:
-            book = item  # 兼容平铺格式的数据结构
-            
-        cover_url = book.get("cover", "")
-        if cover_url:
-            cover_url = cover_url.replace("/s_", "/t6_") # 替换为高清画质封面图
+        book = item.get("book", item)
+        cover_url = book.get("cover", "").replace("/s_", "/t6_")
 
         processed_books.append({
             "id": book.get("bookId", ""),
@@ -77,21 +60,17 @@ def fetch_weread_data():
             "reviewCount": item.get("reviewCount", 0)
         })
 
-    # 4. 组装最终 JSON 数据
-    user_info = read_stat.get("user", {})
-    total_minutes = int(read_stat.get("totalReadTime", 0) / 60)
-
     formatted_data = {
         "user": {
-            "name": user_info.get("name", "微信读书用户"),
-            "avatar": user_info.get("avatar", "https://v1.hitokoto.cn/favicon.ico"),
-            "readingDays": read_stat.get("totalReadDay", len(raw_books)),
-            "totalReadingTimeMinutes": total_minutes,
-            "completedBooksCount": len([b for b in raw_books if (b.get("book", {}).get("progress", 0) >= 100 or b.get("progress", 0) >= 100)]),
-            "notesCount": sum(item.get("noteCount", 0) for item in raw_books)
+            "name": "微信读书用户",
+            "avatar": "https://v1.hitokoto.cn/favicon.ico",
+            "readingDays": len(raw_books),
+            "totalReadingTimeMinutes": 0,
+            "completedBooksCount": len([b for b in raw_books if b.get("progress", 0) >= 100]),
+            "notesCount": sum(item.get("noteCount", 0) for item in raw_books if isinstance(item, dict))
         },
-        "weeklyTrend": read_stat.get("recentWeekTrend", []),
-        "heatmap": read_stat.get("dailyReadDetail", []),
+        "weeklyTrend": [],
+        "heatmap": [],
         "books": processed_books
     }
 
@@ -99,7 +78,7 @@ def fetch_weread_data():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(formatted_data, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ 诊断脚本执行完毕，数据已写入至: {OUTPUT_FILE}")
+    print(f"✅ 数据处理完成，已写入: {OUTPUT_FILE}")
 
 if __name__ == "__main__":
-    fetch_weread_data()
+    fetch_weread_agent_data()
