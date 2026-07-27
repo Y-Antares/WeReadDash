@@ -2,14 +2,15 @@ name: Sync WeRead Data
 
 on:
   schedule:
-    # 每天 UTC 时间 20:00 触发 (对应北京时间 04:00)
     - cron: '0 20 * * *'
-  # 支持在 GitHub Actions 页面手动点击触发运行
   workflow_dispatch:
 
 jobs:
   sync-data:
     runs-on: ubuntu-latest
+    # 重点：显式赋予 GitHub Action 提交代码到仓库的写入权限
+    permissions:
+      contents: write
 
     steps:
       - name: 1. 拉取仓库代码
@@ -38,7 +39,6 @@ jobs:
           
           git add src/data/weread.json
           
-          # 检查是否有数据变更，有变更才提交，防止产生空白提交错误
           if git diff --staged --quiet; then
             echo "数据未发生变化，无需提交。"
           else
