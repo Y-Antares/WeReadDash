@@ -5,34 +5,45 @@ import ReadingTrendChart from '../components/ReadingTrendChart.jsx';
 import ReadingHeatmap from '../components/ReadingHeatmap.jsx';
 import RecentBooks from '../components/RecentBooks.jsx';
 
-// 部署或服务端渲染时直接调用 API
-const response = await fetch('http://localhost:4321/api/read-data.json');
-const data = await response.json();
+// 引入逻辑，直接在 SSR 阶段运行，不发 HTTP 请求
+import { GET } from './api/read-data.json.js';
+
+let data = {
+  user: { name: "微信读书用户", readingDays: 0, totalReadingTimeMinutes: 0, completedBooksCount: 0, notesCount: 0 },
+  weeklyTrend: [],
+  heatmap: [],
+  books: []
+};
+
+try {
+  const response = await GET();
+  if (response.ok) {
+    data = await response.json();
+  }
+} catch (e) {
+  console.error("构建时拉取数据失败，使用降级数据:", e);
+}
 ---
 
 <Layout title="WeReadDash - 微信读书数据仪表盘">
-  <main className="min-h-screen bg-zinc-950 text-zinc-100 p-4 sm:p-8 max-w-7xl mx-auto space-y-6">
-    <!-- Header -->
-    <header className="flex justify-between items-center border-b border-zinc-800 pb-5">
-      <div className="flex items-center space-x-3">
-        <img src={data.user.avatar} className="w-10 h-10 rounded-full border border-zinc-700" alt="Avatar" />
+  <main class="min-h-screen bg-zinc-950 text-zinc-100 p-4 sm:p-8 max-w-7xl mx-auto space-y-6">
+    <header class="flex justify-between items-center border-b border-zinc-800 pb-5">
+      <div class="flex items-center space-x-3">
+        <img src={data.user?.avatar || "https://v1.hitokoto.cn/favicon.ico"} class="w-10 h-10 rounded-full border border-zinc-700" alt="Avatar" />
         <div>
-          <h1 className="text-xl font-bold">{data.user.name} 的微信读书展板</h1>
-          <p className="text-xs text-zinc-500">同步于 WeRead API</p>
+          <h1 class="text-xl font-bold">{data.user?.name} 的微信读书展板</h1>
+          <p class="text-xs text-zinc-500">同步于 WeRead API</p>
         </div>
       </div>
     </header>
 
-    <!-- Stat Cards -->
     <StatCards client:load user={data.user} />
 
-    <!-- Visualizations Layout -->
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <ReadingTrendChart client:load data={data.weeklyTrend} />
       <ReadingHeatmap client:load heatmapData={data.heatmap} />
     </div>
 
-    <!-- Books Shelf -->
     <RecentBooks client:load books={data.books} />
   </main>
 </Layout>
