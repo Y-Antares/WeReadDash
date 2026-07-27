@@ -3,54 +3,66 @@ import json
 import requests
 
 OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "../src/data/weread.json")
+GATEWAY_URL = "https://i.weread.qq.com/api/agent/gateway"
 
-def fetch_weread_agent_data():
-    api_key = os.environ.get("WEREAD_KEY", "").strip()
-    if not api_key:
-        print("❌ 错误：环境变量 WEREAD_KEY 为空！")
-        return
-
-    # 微信读书官方 Agent API 鉴权 Header
+def call_agent(api_name, params=None, api_key=""):
+    """
+    完全对齐 obsidian-weread-plugin 的 callAgent 逻辑
+    """
+    if params is None:
+        params = {}
+        
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36",
+        "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     }
 
-    print("🚀 开始请求微信读书 Agent API...")
+    payload = {
+        "api_name": api_name,
+        "skill_version": "1.0.3",
+        **params
+    }
 
-    # 1. 请求官方 Agent API 的笔记本/书架列表
-    # Agent 架构下的 Endpoint 为 /api/v2/notebooks 或插件所调用的网关
-    agent_notebooks_url = "https://weread.qq.com/api/v2/notebooks" 
-    raw_books = []
-    
     try:
-        res = requests.get(agent_notebooks_url, headers=headers, timeout=15)
-        print(f"📌 [Agent Notebooks] HTTP 状态码: {res.status_code}")
-        
-        # 如果 v2 路径不对，回退尝试 Agent 备用路径
-        if res.status_code == 404:
-            agent_notebooks_url = "https://weread.qq.com/api/skills/notebooks"
-            res = requests.get(agent_notebooks_url, headers=headers, timeout=15)
-            print(f"📌 [Skills Notebooks] HTTP 状态码: {res.status_code}")
-
+        res = requests.post(GATEWAY_URL, headers=headers, json=payload, timeout=15)
         if res.status_code == 200:
             data = res.json()
-            raw_books = data.get("books", []) if isinstance(data, dict) else data
-            print(f"📚 成功通过 Agent API 拉取到 {len(raw_books)} 本书籍")
+            if data.get("errcode", 0) != 0:
+                print(f"❌ Agent API 逻辑错误 [{api_name}]: {data.get('errmsg')}")
+                return None
+            return data
         else:
-            print(f"🔍 接口返回: {res.text[:300]}")
+            print(f"❌ HTTP 请求失败 [{api_name}]: 状态码 {res.status_code}")
+            return None
     except Exception as e:
-        print(f"❌ 请求 Agent API 异常: {e}")
+        print(f"❌ 请求网关异常 [{api_name}]: {e}")
+        return None
 
-    # 2. 清洗数据并写入 json
+def fetch_weread_data():
+    api_key = os.environ.get("WEREAD_KEY", "").strip()
+    if not api_key:
+        print("❌ 错误：环境变量 WEREAD_KEY 未配置！")
+        return
+
+    print("🚀 开始通过微信读书 Agent Gateway 拉取数据...")
+
+    # 1. 调用 /user/notebooks 获取所有书架/笔记本书籍
+    notebooks_data = call_agent("/user/notebooks", {"count": 300}, api_key)
+    raw_books = notebooks_data.get("books", []) if notebooks_data else []
+    print(f"📚 成功拉取到 {len(raw_books)} 本书籍")
+
+    # 2. 调用 /readdata/detail 获取详细阅读统计 (传入 mode 参数)
+    read_stat = call_agent("/readdata/detail", {"mode": "all"}, api_key) or {}
+
+    # 3. 整理近期阅读书籍 (前 6 本)
     processed_books = []
     for item in raw_books[:6]:
         book = item.get("book", item)
         cover_url = book.get("cover", "").replace("/s_", "/t6_")
 
         processed_books.append({
-            "id": book.get("bookId", ""),
+            "id": str(book.get("bookId", "")),
             "title": book.get("title", "未知书名"),
             "author": book.get("author", "未知作者"),
             "cover": cover_url,
@@ -60,25 +72,33 @@ def fetch_weread_agent_data():
             "reviewCount": item.get("reviewCount", 0)
         })
 
+    # 4. 提取用户信息与统计数据
+    user_info = read_stat.get("user", {})
+    total_minutes = int(read_stat.get("totalReadTime", 0) / 60)
+
     formatted_data = {
         "user": {
-            "name": "微信读书用户",
-            "avatar": "https://v1.hitokoto.cn/favicon.ico",
-            "readingDays": len(raw_books),
-            "totalReadingTimeMinutes": 0,
-            "completedBooksCount": len([b for b in raw_books if b.get("progress", 0) >= 100]),
-            "notesCount": sum(item.get("noteCount", 0) for item in raw_books if isinstance(item, dict))
+            "name": user_info.get("name", "微信读书用户"),
+            "avatar": user_info.get("avatar", "https://v1.hitokoto.cn/favicon.ico"),
+            "readingDays": read_stat.get("totalReadDay", len(raw_books)),
+            "totalReadingTimeMinutes": total_minutes,
+            "completedBooksCount": len([
+                b for b in raw_books 
+                if (b.get("book", {}).get("progress", 0) >= 100 or b.get("progress", 0) >= 100)
+            ]),
+            "notesCount": sum(item.get("noteCount", 0) for item in raw_books)
         },
-        "weeklyTrend": [],
-        "heatmap": [],
+        "weeklyTrend": read_stat.get("recentWeekTrend", []),
+        "heatmap": read_stat.get("dailyReadDetail", []),
         "books": processed_books
     }
 
+    # 5. 覆盖保存至静态 JSON
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(formatted_data, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ 数据处理完成，已写入: {OUTPUT_FILE}")
+    print(f"✅ 数据成功保存至: {OUTPUT_FILE}")
 
 if __name__ == "__main__":
-    fetch_weread_agent_data()
+    fetch_weread_data()
