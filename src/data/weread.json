@@ -2,19 +2,40 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 428,
-    "totalReadingTimeMinutes": 18420,
-    "completedBooksCount": 36,
-    "notesCount": 512
+    "readingDays": 0,
+    "totalReadingTimeMinutes": 0,
+    "completedBooksCount": 0,
+    "notesCount": 0
   },
   "weeklyTrend": [
-    { "day": "周一", "minutes": 45 },
-    { "day": "周二", "minutes": 60 },
-    { "day": "周三", "minutes": 20 },
-    { "day": "周四", "minutes": 90 },
-    { "day": "周五", "minutes": 30 },
-    { "day": "周六", "minutes": 120 },
-    { "day": "周日", "minutes": 105 }
+    {
+      "day": "周一",
+      "minutes": 0
+    },
+    {
+      "day": "周二",
+      "minutes": 0
+    },
+    {
+      "day": "周三",
+      "minutes": 0
+    },
+    {
+      "day": "周四",
+      "minutes": 0
+    },
+    {
+      "day": "周五",
+      "minutes": 0
+    },
+    {
+      "day": "周六",
+      "minutes": 0
+    },
+    {
+      "day": "周日",
+      "minutes": 0
+    }
   ],
   "heatmap": [],
   "books": []
