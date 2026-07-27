@@ -2,12 +2,73 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 0,
+    "readingDays": 19,
     "totalReadingTimeMinutes": 0,
     "completedBooksCount": 0,
-    "notesCount": 0
+    "notesCount": 54
   },
   "weeklyTrend": [],
   "heatmap": [],
-  "books": []
+  "books": [
+    {
+      "id": "41100356",
+      "title": "挽救计划（同名电影原著）",
+      "author": "[美]安迪·威尔",
+      "cover": "https://cdn.weread.qq.com/weread/cover/0/yuewen_41100356/t6_yuewen_411003561772520377.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 13,
+      "reviewCount": 10
+    },
+    {
+      "id": "847195",
+      "title": "金枝",
+      "author": "詹姆斯·乔治·弗雷泽",
+      "cover": "https://wfqqreader-1252317822.image.myqcloud.com/cover/195/847195/t6_847195.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 1,
+      "reviewCount": 0
+    },
+    {
+      "id": "800224",
+      "title": "货币战争（全5册）",
+      "author": "宋鸿兵",
+      "cover": "https://cdn.weread.qq.com/weread/cover/28/yuewen_800224/t6_yuewen_8002241732692617.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 1,
+      "reviewCount": 0
+    },
+    {
+      "id": "3300192134",
+      "title": "天文爱好者（2026 年第 1 期）",
+      "author": "天文爱好者",
+      "cover": "https://cdn.weread.qq.com/weread/cover/17/cpplatform_t7gsyj4c9dddc6z4gom3un/t6_cpplatform_t7gsyj4c9dddc6z4gom3un1768385583.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 0,
+      "reviewCount": 1
+    },
+    {
+      "id": "40527628",
+      "title": "上海译文大学译丛精选集（套装共26本）",
+      "author": "[美]巴林顿·摩尔 [英]大卫·哈维等",
+      "cover": "https://cdn.weread.qq.com/weread/cover/10/YueWen_40527628/t6_YueWen_40527628.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 1,
+      "reviewCount": 0
+    },
+    {
+      "id": "43028702",
+      "title": "中国文化课",
+      "author": "余秋雨",
+      "cover": "https://wfqqreader-1252317822.image.myqcloud.com/cover/702/43028702/t6_43028702.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 2,
+      "reviewCount": 0
+    }
+  ]
 }
