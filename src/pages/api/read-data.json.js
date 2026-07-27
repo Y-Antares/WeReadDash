@@ -1,17 +1,10 @@
 // src/pages/api/read-data.json.js
 
-const WEREAD_KEY = process.env.WEREAD_KEY || process.env.WEREAD_COOKIE || '';
-
-// 模拟 Obsidian 插件的 ApiV2Manager.callAgent 逻辑
-async function callAgent(apiName, params = {}) {
-  if (!WEREAD_KEY) {
-    throw new Error('未配置 WEREAD_KEY，请检查环境变量。');
-  }
-
+async function callAgent(apiKey, apiName, params = {}) {
   const headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)',
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${WEREAD_KEY}`
+    'Authorization': `Bearer ${apiKey}`
   };
 
   const response = await fetch('https://i.weread.qq.com/api/agent/gateway', {
@@ -35,26 +28,24 @@ async function callAgent(apiName, params = {}) {
   return data;
 }
 
-export async function GET() {
-  if (!WEREAD_KEY) {
+export async function GET({ request }) {
+  const url = new URL(request.url);
+  const apiKey = url.searchParams.get('apiKey');
+
+  if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: "未配置 WEREAD_KEY" }), 
-      { status: 401, headers: { "Content-Type": "application/json" } }
+      JSON.stringify({ error: "Missing apiKey parameter" }), 
+      { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
 
   try {
-    // 1. 获取笔记本/书架数据 (最多获取 300 本以作展示)
-    const notebooksData = await callAgent('/user/notebooks', { count: 300 });
+    const notebooksData = await callAgent(apiKey, '/user/notebooks', { count: 300 });
     const rawBooks = notebooksData?.books || [];
 
-    // 2. 获取用户基础信息
-    const userInfo = await callAgent('/user/info').catch(() => ({}));
+    const userInfo = await callAgent(apiKey, '/user/info').catch(() => ({}));
+    const readStat = await callAgent(apiKey, '/readdata/detail').catch(() => ({}));
 
-    // 3. 获取阅读统计信息
-    const readStat = await callAgent('/readdata/detail').catch(() => ({}));
-
-    // 4. 数据格式化映射 (适配前端 UI 组件)
     const books = rawBooks.slice(0, 6).map((item) => {
       const book = item.book || {};
       return {
@@ -78,29 +69,18 @@ export async function GET() {
         completedBooksCount: rawBooks.filter(b => (b.book?.progress || 0) >= 100).length || 0,
         notesCount: rawBooks.reduce((acc, curr) => acc + (curr.noteCount || 0), 0)
       },
-      // 容错处理：如果新 API 不包含以下数据，提供模拟 fallback，或直接使用 readStat 中的等价字段
       weeklyTrend: readStat?.recentWeekTrend || [
-        { day: "周一", minutes: 30 }, { day: "周二", minutes: 45 },
-        { day: "周三", minutes: 60 }, { day: "周四", minutes: 20 },
-        { day: "周五", minutes: 90 }, { day: "周六", minutes: 120 }, { day: "周日", minutes: 80 }
+        { day: "周一", minutes: 0 }, { day: "周二", minutes: 0 },
+        { day: "周三", minutes: 0 }, { day: "周四", minutes: 0 },
+        { day: "周五", minutes: 0 }, { day: "周六", minutes: 0 }, { day: "周日", minutes: 0 }
       ],
-      heatmap: readStat?.dailyReadDetail || Array.from({ length: 90 }).map((_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - (89 - i));
-        return {
-          date: date.toISOString().split('T')[0],
-          count: Math.floor(Math.random() * 4)
-        };
-      }),
+      heatmap: readStat?.dailyReadDetail || [],
       books: books
     };
 
     return new Response(JSON.stringify(formattedData), {
       status: 200,
-      headers: { 
-        "Content-Type": "application/json",
-        "Cache-Control": "s-maxage=3600, stale-while-revalidate=86400"
-      }
+      headers: { "Content-Type": "application/json" }
     });
 
   } catch (error) {

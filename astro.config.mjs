@@ -1,11 +1,14 @@
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
-// 引入对应的部署适配器，例如 Vercel
-import vercel from '@astrojs/vercel/serverless'; 
+import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
-  output: 'hybrid', // 核心：混合渲染模式
+  output: 'hybrid', // 开启混合渲染，使 API 路由变成动态 SSR
   adapter: vercel(),
-  integrations: [react(), tailwind()],
+  integrations: [
+    react(),
+    tailwind()
+  ],
 });
