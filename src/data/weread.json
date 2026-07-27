@@ -7,36 +7,7 @@
     "completedBooksCount": 0,
     "notesCount": 0
   },
-  "weeklyTrend": [
-    {
-      "day": "周一",
-      "minutes": 0
-    },
-    {
-      "day": "周二",
-      "minutes": 0
-    },
-    {
-      "day": "周三",
-      "minutes": 0
-    },
-    {
-      "day": "周四",
-      "minutes": 0
-    },
-    {
-      "day": "周五",
-      "minutes": 0
-    },
-    {
-      "day": "周六",
-      "minutes": 0
-    },
-    {
-      "day": "周日",
-      "minutes": 0
-    }
-  ],
+  "weeklyTrend": [],
   "heatmap": [],
   "books": []
 }
