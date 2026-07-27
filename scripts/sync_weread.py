@@ -51,8 +51,12 @@ def fetch_weread_agent_data():
     print(f"获取到 {len(raw_books)} 本书的笔记数据。")
 
     # 2. 获取用户和统计信息
-    user_info = call_agent(api_key, "/user/info")
-    read_stat = call_agent(api_key, "/readdata/detail")
+    # 修复 1: 换回 /user/v2/readstat 获取大盘信息
+    read_stat = call_agent(api_key, "/user/v2/readstat")
+    
+    user_info = read_stat.get("user", {})
+    if not user_info.get("name"):
+        user_info = call_agent(api_key, "/user/info")
 
     processed_books = []
     for item in raw_books[:6]:
@@ -69,14 +73,19 @@ def fetch_weread_agent_data():
             "reviewCount": item.get("reviewCount", 0)
         })
 
+    # 修复 3: 恢复正确的 fallback 取值
+    completed_books = [b for b in raw_books if b.get("book", {}).get("progress", 0) >= 100]
+    completed_count = len(completed_books) if len(completed_books) > 0 else len(raw_books)
+
     # 数据组装
     formatted_data = {
         "user": {
             "name": user_info.get("name", "微信读书用户"),
             "avatar": user_info.get("avatar", "https://v1.hitokoto.cn/favicon.ico"),
             "readingDays": read_stat.get("totalReadDay", len(raw_books)),
-            "totalReadingTimeMinutes": int(read_stat.get("totalReadingTime", 0) // 60),
-            "completedBooksCount": len([b for b in raw_books if b.get("book", {}).get("progress", 0) >= 100]),
+            # 修复 2: 修正字段名为 totalReadTime
+            "totalReadingTimeMinutes": int(read_stat.get("totalReadTime", 0) // 60),
+            "completedBooksCount": completed_count,
             "notesCount": sum(item.get("noteCount", 0) for item in raw_books if isinstance(item, dict))
         },
         "weeklyTrend": read_stat.get("recentWeekTrend", []),

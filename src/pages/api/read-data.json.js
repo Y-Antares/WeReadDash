@@ -43,8 +43,17 @@ export async function GET({ request }) {
     const notebooksData = await callAgent(apiKey, '/user/notebooks', { count: 300 });
     const rawBooks = notebooksData?.books || [];
 
-    const userInfo = await callAgent(apiKey, '/user/info').catch(() => ({}));
-    const readStat = await callAgent(apiKey, '/readdata/detail').catch(() => ({}));
+    // 修复 1: 使用正确的统计大盘接口
+    const readStat = await callAgent(apiKey, '/user/v2/readstat').catch((e) => {
+      console.warn("获取 readstat 失败", e);
+      return {};
+    });
+
+    let user = readStat?.user || {};
+    if (!user.name) {
+      const userInfo = await callAgent(apiKey, '/user/info').catch(() => ({}));
+      user = userInfo || {};
+    }
 
     const books = rawBooks.slice(0, 6).map((item) => {
       const book = item.book || {};
@@ -60,13 +69,17 @@ export async function GET({ request }) {
       };
     });
 
+    // 修复 3: 恢复正确的 fallback 逻辑
+    const completedBooks = rawBooks.filter(b => (b.book?.progress || 0) >= 100).length;
+
     const formattedData = {
       user: {
-        name: userInfo?.name || "微信读书用户",
-        avatar: userInfo?.avatar || "https://v1.hitokoto.cn/favicon.ico",
+        name: user.name || "微信读书用户",
+        avatar: user.avatar || "https://v1.hitokoto.cn/favicon.ico",
         readingDays: readStat?.totalReadDay || rawBooks.length,
-        totalReadingTimeMinutes: Math.floor((readStat?.totalReadingTime || 0) / 60),
-        completedBooksCount: rawBooks.filter(b => (b.book?.progress || 0) >= 100).length || 0,
+        // 修复 2: 字段更正为 totalReadTime (单位：秒)
+        totalReadingTimeMinutes: Math.floor((readStat?.totalReadTime || 0) / 60),
+        completedBooksCount: completedBooks > 0 ? completedBooks : rawBooks.length,
         notesCount: rawBooks.reduce((acc, curr) => acc + (curr.noteCount || 0), 0)
       },
       weeklyTrend: readStat?.recentWeekTrend || [
