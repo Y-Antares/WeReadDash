@@ -2,14 +2,24 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 19,
+    "readingDays": 20,
     "totalReadingTimeMinutes": 0,
-    "completedBooksCount": 19,
-    "notesCount": 54
+    "completedBooksCount": 20,
+    "notesCount": 58
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "852904",
+      "title": "银河铁道之夜（果麦经典）",
+      "author": "宫泽贤治",
+      "cover": "https://cdn.weread.qq.com/weread/cover/96/YueWen_852904/t6_YueWen_852904.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 4,
+      "reviewCount": 0
+    },
     {
       "id": "41100356",
       "title": "挽救计划（同名电影原著）",
@@ -58,16 +68,6 @@
       "progress": 0,
       "category": "未分类",
       "noteCount": 1,
-      "reviewCount": 0
-    },
-    {
-      "id": "43028702",
-      "title": "中国文化课",
-      "author": "余秋雨",
-      "cover": "https://wfqqreader-1252317822.image.myqcloud.com/cover/702/43028702/t6_43028702.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 2,
       "reviewCount": 0
     }
   ]
