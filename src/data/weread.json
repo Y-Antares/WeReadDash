@@ -2,14 +2,24 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 20,
+    "readingDays": 21,
     "totalReadingTimeMinutes": 0,
-    "completedBooksCount": 20,
-    "notesCount": 58
+    "completedBooksCount": 21,
+    "notesCount": 78
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "3300116431",
+      "title": "故事形态学",
+      "author": "[苏]弗拉基米尔·雅可夫列维奇·普罗普",
+      "cover": "https://cdn.weread.qq.com/weread/cover/54/cpplatform_ng1yjrl8tq8qtxy99zy7xy/t6_cpplatform_ng1yjrl8tq8qtxy99zy7xy1727433916.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 20,
+      "reviewCount": 7
+    },
     {
       "id": "852904",
       "title": "银河铁道之夜（果麦经典）",
@@ -59,16 +69,6 @@
       "category": "未分类",
       "noteCount": 0,
       "reviewCount": 1
-    },
-    {
-      "id": "40527628",
-      "title": "上海译文大学译丛精选集（套装共26本）",
-      "author": "[美]巴林顿·摩尔 [英]大卫·哈维等",
-      "cover": "https://cdn.weread.qq.com/weread/cover/10/YueWen_40527628/t6_YueWen_40527628.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 1,
-      "reviewCount": 0
     }
   ]
 }
