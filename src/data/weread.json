@@ -5,7 +5,7 @@
     "readingDays": 21,
     "totalReadingTimeMinutes": 0,
     "completedBooksCount": 21,
-    "notesCount": 78
+    "notesCount": 79
   },
   "weeklyTrend": [],
   "heatmap": [],
@@ -17,8 +17,8 @@
       "cover": "https://cdn.weread.qq.com/weread/cover/54/cpplatform_ng1yjrl8tq8qtxy99zy7xy/t6_cpplatform_ng1yjrl8tq8qtxy99zy7xy1727433916.jpg",
       "progress": 0,
       "category": "未分类",
-      "noteCount": 20,
-      "reviewCount": 7
+      "noteCount": 21,
+      "reviewCount": 9
     },
     {
       "id": "852904",
