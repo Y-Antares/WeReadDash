@@ -2,10 +2,10 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 21,
+    "readingDays": 22,
     "totalReadingTimeMinutes": 0,
-    "completedBooksCount": 21,
-    "notesCount": 79
+    "completedBooksCount": 22,
+    "notesCount": 95
   },
   "weeklyTrend": [],
   "heatmap": [],
@@ -17,8 +17,18 @@
       "cover": "https://cdn.weread.qq.com/weread/cover/54/cpplatform_ng1yjrl8tq8qtxy99zy7xy/t6_cpplatform_ng1yjrl8tq8qtxy99zy7xy1727433916.jpg",
       "progress": 0,
       "category": "未分类",
-      "noteCount": 21,
-      "reviewCount": 9
+      "noteCount": 36,
+      "reviewCount": 17
+    },
+    {
+      "id": "34232691",
+      "title": "北外高翻笔译课（英译汉）",
+      "author": "李长栓  王苏阳",
+      "cover": "https://wfqqreader-1252317822.image.myqcloud.com/cover/691/34232691/t6_34232691.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 1,
+      "reviewCount": 0
     },
     {
       "id": "852904",
@@ -59,16 +69,6 @@
       "category": "未分类",
       "noteCount": 1,
       "reviewCount": 0
-    },
-    {
-      "id": "3300192134",
-      "title": "天文爱好者（2026 年第 1 期）",
-      "author": "天文爱好者",
-      "cover": "https://cdn.weread.qq.com/weread/cover/17/cpplatform_t7gsyj4c9dddc6z4gom3un/t6_cpplatform_t7gsyj4c9dddc6z4gom3un1768385583.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 0,
-      "reviewCount": 1
     }
   ]
 }
