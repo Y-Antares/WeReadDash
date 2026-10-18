@@ -5,11 +5,21 @@
     "readingDays": 26,
     "totalReadingTimeMinutes": 0,
     "completedBooksCount": 26,
-    "notesCount": 137
+    "notesCount": 148
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "857863",
+      "title": "献给阿尔吉侬的花束",
+      "author": "丹尼尔·凯斯",
+      "cover": "https://cdn.weread.qq.com/weread/cover/11/yuewen_857863/t6_yuewen_8578631681827306.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 21,
+      "reviewCount": 9
+    },
     {
       "id": "3300020482",
       "title": "一桩事先张扬的凶杀案",
@@ -39,16 +49,6 @@
       "category": "未分类",
       "noteCount": 7,
       "reviewCount": 4
-    },
-    {
-      "id": "857863",
-      "title": "献给阿尔吉侬的花束",
-      "author": "丹尼尔·凯斯",
-      "cover": "https://cdn.weread.qq.com/weread/cover/11/yuewen_857863/t6_yuewen_8578631681827306.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 10,
-      "reviewCount": 3
     },
     {
       "id": "3300116431",
