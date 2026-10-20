@@ -5,11 +5,21 @@
     "readingDays": 26,
     "totalReadingTimeMinutes": 0,
     "completedBooksCount": 26,
-    "notesCount": 184
+    "notesCount": 186
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "41100356",
+      "title": "挽救计划（同名电影原著）",
+      "author": "[美]安迪·威尔",
+      "cover": "https://cdn.weread.qq.com/weread/cover/0/yuewen_41100356/t6_yuewen_411003561772520377.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 15,
+      "reviewCount": 11
+    },
     {
       "id": "857863",
       "title": "献给阿尔吉侬的花束",
@@ -59,16 +69,6 @@
       "category": "未分类",
       "noteCount": 50,
       "reviewCount": 20
-    },
-    {
-      "id": "34232691",
-      "title": "北外高翻笔译课（英译汉）",
-      "author": "李长栓  王苏阳",
-      "cover": "https://wfqqreader-1252317822.image.myqcloud.com/cover/691/34232691/t6_34232691.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 1,
-      "reviewCount": 0
     }
   ]
 }
