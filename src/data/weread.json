@@ -2,14 +2,24 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 26,
+    "readingDays": 27,
     "totalReadingTimeMinutes": 0,
-    "completedBooksCount": 26,
-    "notesCount": 245
+    "completedBooksCount": 27,
+    "notesCount": 250
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "3300183944",
+      "title": "变形记",
+      "author": "[奥]弗朗茨·卡夫卡",
+      "cover": "https://cdn.weread.qq.com/weread/cover/26/cpplatform_5tvqwlg51zfrcaiyfidpum/t6_cpplatform_5tvqwlg51zfrcaiyfidpum1765263935.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 3,
+      "reviewCount": 0
+    },
     {
       "id": "3300020482",
       "title": "一桩事先张扬的凶杀案",
@@ -17,7 +27,7 @@
       "cover": "https://cdn.weread.qq.com/weread/cover/82/3300020482/t6_3300020482.jpg",
       "progress": 0,
       "category": "未分类",
-      "noteCount": 29,
+      "noteCount": 31,
       "reviewCount": 5
     },
     {
@@ -59,16 +69,6 @@
       "category": "未分类",
       "noteCount": 7,
       "reviewCount": 4
-    },
-    {
-      "id": "3300116431",
-      "title": "故事形态学",
-      "author": "[苏]弗拉基米尔·雅可夫列维奇·普罗普",
-      "cover": "https://cdn.weread.qq.com/weread/cover/54/cpplatform_ng1yjrl8tq8qtxy99zy7xy/t6_cpplatform_ng1yjrl8tq8qtxy99zy7xy1727433916.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 50,
-      "reviewCount": 20
     }
   ]
 }
