@@ -2,14 +2,24 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 27,
+    "readingDays": 28,
     "totalReadingTimeMinutes": 0,
-    "completedBooksCount": 27,
-    "notesCount": 250
+    "completedBooksCount": 28,
+    "notesCount": 251
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "35281084",
+      "title": "天真的人类学家",
+      "author": "奈吉尔·巴利",
+      "cover": "https://cdn.weread.qq.com/weread/cover/31/YueWen_35281084/t6_YueWen_35281084.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 1,
+      "reviewCount": 0
+    },
     {
       "id": "3300183944",
       "title": "变形记",
@@ -59,16 +69,6 @@
       "category": "未分类",
       "noteCount": 1,
       "reviewCount": 0
-    },
-    {
-      "id": "3300139691",
-      "title": "套中人（轻经典）",
-      "author": "[俄]契诃夫",
-      "cover": "https://cdn.weread.qq.com/weread/cover/85/cpplatform_emzv5wmxjegpk45wn8j1v3/t6_cpplatform_emzv5wmxjegpk45wn8j1v31743575143.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 7,
-      "reviewCount": 4
     }
   ]
 }
