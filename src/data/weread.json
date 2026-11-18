@@ -2,14 +2,24 @@
   "user": {
     "name": "微信读书用户",
     "avatar": "https://v1.hitokoto.cn/favicon.ico",
-    "readingDays": 28,
+    "readingDays": 29,
     "totalReadingTimeMinutes": 0,
-    "completedBooksCount": 28,
-    "notesCount": 251
+    "completedBooksCount": 29,
+    "notesCount": 253
   },
   "weeklyTrend": [],
   "heatmap": [],
   "books": [
+    {
+      "id": "3300035751",
+      "title": "猫头鹰王国（全15册）",
+      "author": "凯瑟琳·拉丝基",
+      "cover": "https://cdn.weread.qq.com/weread/cover/76/cpPlatform_iGe4b9f9CbDKd5BCWszXem/t6_cpPlatform_iGe4b9f9CbDKd5BCWszXem.jpg",
+      "progress": 0,
+      "category": "未分类",
+      "noteCount": 2,
+      "reviewCount": 0
+    },
     {
       "id": "35281084",
       "title": "天真的人类学家",
@@ -59,16 +69,6 @@
       "category": "未分类",
       "noteCount": 57,
       "reviewCount": 30
-    },
-    {
-      "id": "3300136797",
-      "title": "血孩子（THE WILLING《献身》原小说)",
-      "author": "[美]奥克塔维娅.E.巴特勒",
-      "cover": "https://cdn.weread.qq.com/weread/cover/59/cpplatform_gh8xdcxletxvdgaj1h6uqr/t6_cpplatform_gh8xdcxletxvdgaj1h6uqr1741576325.jpg",
-      "progress": 0,
-      "category": "未分类",
-      "noteCount": 1,
-      "reviewCount": 0
     }
   ]
 }
